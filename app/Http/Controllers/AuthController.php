@@ -27,11 +27,10 @@ class AuthController extends Controller
         $user = User::create(array_merge(
                     $validator->validated(),
                     ['password' => bcrypt($request->password)]
-                ));
+                ))->sendEmailVerificationNotification();
 
         return response()->json([
-            'message' => 'User successfully registered',
-            'user' => $user
+            'message' => 'A verified email has been sent to your email',
         ], 201);
     }
 
@@ -43,6 +42,11 @@ class AuthController extends Controller
 
         if($validator->fails()) {
             return response()->json($validator->errors(), 422);
+        }
+
+        $user = User::where('email', $request->email)->first();
+        if(!$user->hasVerifiedEmail()){
+            return response()->json(['error' => 'Email has not been verified'], 400);
         }
 
         //attempt() return a jwt or null 
