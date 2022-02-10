@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\Admin\UserController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -35,3 +36,10 @@ Route::group([
     Route::post('password/reset', [PasswordController::class, 'reset'])->name('reset');
 });
 
+Route::group([
+    'middleware' => 'api',
+], function ($router) {
+    Route::get('/users', [UserController::class, 'index']);
+    Route::get('/users/{id}', [UserController::class, 'show']);
+    Route::delete('/users/{id}', [UserController::class, 'destroy']);
+});

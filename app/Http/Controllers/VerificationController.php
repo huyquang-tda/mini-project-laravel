@@ -28,12 +28,5 @@ class VerificationController extends Controller
             $user->sendEmailVerificationNotification();
             return response()->json(["message" => "Email verification link sent to your email"]);
         }
-        
-        // if (auth()->user()->hasVerifiedEmail()) {
-        //     return response()->json(["message" => "Email already verified."], 400);
-        // }
-        // auth()->user()->sendEmailVerificationNotification();
-    
-        // return response()->json(["message" => "Email verification link sent on your email id"]);
     }
 }

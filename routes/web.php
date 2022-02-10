@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use App\Http\Controllers\PasswordController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,4 +17,5 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::view('reset/password', 'auth.reset_password')->name('password.reset');
+// Route::view('reset/password', 'auth.reset_password')->name('password.reset');
+// Route::post('password/reset', [PasswordController::class, 'reset'])->name('reset');

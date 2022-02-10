@@ -30,7 +30,7 @@ class AuthController extends Controller
                 ))->sendEmailVerificationNotification();
 
         return response()->json([
-            'message' => 'A verified email has been sent to your email',
+            'success' => 'A verified email has been sent to your email',
         ], 201);
     }
 

@@ -13,10 +13,18 @@ class PasswordController extends Controller
             'email' => 'required|email'
         ]);
 
-        $status = Password::sendResetLink($email->validated());
+        if($email->fails()){
+            return response()->json($email->errors(), 400);
+        }
 
-        return response()->json(['message' => __($status)]);
+        $status = Password::sendResetLink($email->validated());
+        if($status === Password::RESET_LINK_SENT){
+            return response()->json(['success' => __($status)], 200);
+        }
+
+        return response()->json(['error' => __($status)], 400);
     }
+
 
     public function reset(Request $request){
         $validator = Validator::make($request->all(), [
@@ -25,15 +33,19 @@ class PasswordController extends Controller
             'password' => 'required|string|confirmed'
         ]);
 
+        if($validator->fails()){
+            return response()->json($validator->errors(), 400);
+        }
+        
         $status = Password::reset($validator->validated(), function ($user, $password) {
-            $user->password = $password;
+            $user->password = bcrypt($password);
             $user->save();
         });
 
         if($status === Password::INVALID_TOKEN){
-            return response()->json(['message' => __($status)], 400);
-        } else {
-            return response()->json(['message' => __($status)], 200);
+            return response()->json(['error' => __($status)], 400);
         }
+
+        return response()->json(['success' => 'Password successfully reset']);
     }
 }
